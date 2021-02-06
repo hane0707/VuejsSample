@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>サンプル</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <div id="app">
+            <input type="text" v-bind:value="message"> <!--属性に値をバインドする-->
+            <p v-bind:style="{fontSize: pSize}">文字サイズは{{pSize}}です。</p> <!--syle属性にcssをバインドする（属性名はキャメルケースで記述）-->
+
+            <h3>クリックイベントのハンドリング</h3>
+            <template v-if="stock >= 1">
+                <span class="num">残り{{stock}}個</span>
+                <button class="btn" v-on:click="onDeleteItem">削除</button> 
+            </template>
+            <template v-else>在庫切れ</template>
+            <br>
+
+            <h3>コンポーネントの外側の変化に対するハンドリング</h3>
+            ウインドウの横幅：{{width}}<br>
+            ウインドウの高さ：{{height}}<br>
+            マウスカーソルの位置：{{point.x}}, {{point.y}}
+
+            <h3>データ変更による非同期のイベントハンドリング(ウォッチャ)</h3>
+            <template v-if="stock >= 1">
+                <span class="num">残り{{stock}}個</span>
+                <button class="btn" v-on:click="onDeleteItem">削除</button> 
+            </template>
+            {{soldMessage}}
+
+            <h3>フォーム入力をバインディング(入力とデータの同期)</h3>
+            <input type="text" v-model.number="year">
+            <p>{{year}}</p>
+            <p>※実装上はv-modelに対象のプロパティを紐づけるだけだが、
+                裏ではvue.jsがchangeイベントからDOMの反映までを走らせている。</p>
+        </div>
+        <script src="https://jp.vuejs.org/js/vue.js"></script>
+        <script src="main.js"></script>
+    </body>
+</html>
