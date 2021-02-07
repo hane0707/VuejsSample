@@ -6,6 +6,13 @@ var nodeCheckbox = nodeApp.querySelectorAll('input[type="checkbox"]');
 nodeCheckbox[0].addEventListener('change', onCheckChanged, false);
 nodeCheckbox[1].addEventListener('change', onCheckChanged, false);
 
+// セレクトボックスのイベントハンドラを登録
+var nodeSelect = nodeApp.querySelector('.sorting');
+nodeSelect.addEventListener('change', onOrderChanged, false);
+
+// 初期表示時の商品ノードリスト（保存用）
+var nodeItemsOrg = nodeApp.querySelectorAll('.item');
+
 // チェック状態変更イベントハンドラ
 function onCheckChanged(event){
     var nodeItems = nodeApp.querySelectorAll('.item'); // 商品ノードのリスト
@@ -45,6 +52,46 @@ function onCheckChanged(event){
     }
     // 件数を更新
     nodeCount.textContent = count + '件';
+}
+
+// 並び順の変更イベントハンドラ
+function onOrderChanged(event){
+    var nodeList = nodeApp.querySelector('.list'); // 商品一覧ノード
+    var nodeItems = nodeApp.querySelectorAll('.item'); // 商品ノードのリスト
+
+    // 商品ノードのリストを新しい配列に詰め替える（退避）
+    var products = [];
+    for(var i=0; i<nodeItems.length; i++){
+        products.push(nodeItems[i]);
+    }
+
+    // DOMから全ての商品ノードを削除する
+    while(nodeList.firstChild){
+        nodeList.removeChild(nodeList.firstChild);
+    }
+
+    // 「標準」が選択されている場合
+    if(event.target.value == '1'){
+        // 初期表示時の商品ノードを復元する
+        for(var i=0; i<products.length; i++){
+            nodeList.appendChild(nodeItemsOrg[i]);
+        }
+    }
+    // 「価格が安い順」が選択されている場合
+    else if(event.target.value == '2'){
+        // 配列を並び替え
+        products.sort(function(a, b){
+            // 商品価格のノードからカンマを除去した数値を読み取る
+            var prevPrice = parseInt(a.querySelector('.price span').textContent.replace(',', ''));
+            var currentPrice = parseInt(b.querySelector('.price span').textContent.replace(',', ''));
+            return prevPrice - currentPrice;
+        });
+
+        // 並び替え後の商品ノードをDOMに追加する
+        for(var i=0; i<products.length; i++){
+            nodeList.appendChild(products[i]);
+        }
+    }
 }
 
 // セール商品かどうかを判定する関数
