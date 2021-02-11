@@ -13,16 +13,16 @@
                 <!--検索欄-->
                 <div class="search">
                     <div class="result">
-                        検索結果<span class="count">6件</span>
+                        検索結果<span class="count">{{filteredList.length}}</span>
                     </div>
                     <div class="condition">
                         <div class="target">
-                            <label><input type="checkbox">セール対象</label>
-                            <label><input type="checkbox">送料無料</label>
+                            <label><input type="checkbox" v-model="showSaleItem">セール対象</label>
+                            <label><input type="checkbox" v-model="showDelvFree">送料無料</label>
                         </div>
                         <div class="sort">
                             <label for="sort">並び替え</label>
-                            <select id="sort" class="sorting">
+                            <select id="sort" class="sorting" v-model.number="sortOrder">
                                 <option value="1">標準</option>
                                 <option value="2">価格が安い順</option>
                             </select>
@@ -31,73 +31,28 @@
                 </div>
                 <!--商品一覧-->
                 <div class="list">
-                    <div class="item">
+                    <div class="item" v-for="product in filteredList" v-bind:key="product.id">
                         <figure class="image">
-                            <div class="status">SALE</div>
-                            <img src="images/01.png" alt="">
-                            <figcaption>ばいこーん<br>しんわのいきもの</figcaption>
+                            <template v-if="product.isSale">
+                                <div class="status">SALE</div>
+                            </template>
+                            <img v-bind:src="product.image" alt="">
+                            <figcaption v-html="product.name"></figcaption>
                         </figure>
                         <div class="detail">
-                            <div class="price"><span>1,580</span>円（税込）</div>
-                            <div class="shipping-fee none">送料無料</div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <figure class="image">
-                            <div class="status">SALE</div>
-                            <img src="images/02.png" alt="">
-                            <figcaption>あめみっと<br>しんわのいきもの</figcaption>
-                        </figure>
-                        <div class="detail">
-                            <div class="price"><span>1,580</span>円（税込）</div>
-                            <div class="shipping-fee none">送料無料</div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <figure class="image">
-                            <div class="status">SALE</div>
-                            <img src="images/03.png" alt="">
-                            <figcaption>しろいぞう<br>しんわのいきもの</figcaption>
-                        </figure>
-                        <div class="detail">
-                            <div class="price"><span>1,580</span>円（税込）</div>
-                            <div class="shipping-fee">＋送料240円</div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <figure class="image">
-                            <div class="status">SALE</div>
-                            <img src="images/04.png" alt="">
-                            <figcaption>ねずみのおうさま<br>しんわのいきもの</figcaption>
-                        </figure>
-                        <div class="detail">
-                            <div class="price"><span>980</span>円（税込）</div>
-                            <div class="shipping-fee none">送料無料</div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <figure class="image">
-                            <img src="images/05.png" alt="">
-                            <figcaption>れう"ぃあたん<br>しんわのいきもの</figcaption>
-                        </figure>
-                        <div class="detail">
-                            <div class="price"><span>980</span>円（税込）</div>
-                            <div class="shipping-fee none">送料無料</div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <figure class="image">
-                            <img src="images/06.png" alt="">
-                            <figcaption>すらいむ<br>しんわのいきもの</figcaption>
-                        </figure>
-                        <div class="detail">
-                            <div class="price"><span>1,580</span>円（税込）</div>
-                            <div class="shipping-fee none">送料無料</div>
+                            <div class="price"><span>{{product.price | number_format}}</span>円（税込）</div>
+                            <template v-if="product.delv == 0">
+                                <div class="shipping-fee none">送料無料</div>
+                            </template>
+                            <template v-else>
+                                <div class="shipping-fee">＋送料{{product.delv | number_format}}円</div>
+                            </template>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    <script src="main.js"></script>
+        <script src="https://jp.vuejs.org/js/vue.js"></script>
+        <script src="main.js"></script>
     </body>
 </html>
